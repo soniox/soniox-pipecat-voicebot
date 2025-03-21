@@ -10,6 +10,8 @@ This project demonstrates how to build a complete Pipecat AI agent application w
 - **Client**: Next.js TypeScript web application using the Pipecat React & JS SDKs
 - **Infrastructure**: Deployable to Pipecat Cloud (server) and Vercel (client)
 
+> See the [simple-chatbot example](https://github.com/pipecat-ai/pipecat/tree/main/examples/simple-chatbot) with different client and server implementations.
+
 ## Quick Start
 
 ### 1. Server Setup
@@ -79,6 +81,8 @@ npm run dev
 Open [http://localhost:3000](http://localhost:3000) to interact with your agent through the Next.js client.
 
 ## Deployment
+
+> See the [Pipecat Cloud Quickstart](https://docs.pipecat.daily.co/quickstart) for a complete walkthrough.
 
 ### Deploy Server to Pipecat Cloud
 
