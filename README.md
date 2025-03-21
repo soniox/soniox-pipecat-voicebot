@@ -102,10 +102,11 @@ pcc auth login
 
 ```bash
 cd server
+chmod +x build.sh
 ./build.sh
 ```
 
-> IMPORTANT: Before running this build script, you need to add your Docker Hub username
+> IMPORTANT: Before running this build script, you need to add your DOCKER_USERNAME
 
 4. Create a secret set for your API keys:
 
