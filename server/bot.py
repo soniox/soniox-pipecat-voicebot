@@ -135,7 +135,7 @@ async def main(room_url: str, token: str, config: dict):
     - Animation processing
     - RTVI event handling
     """
-    logger.info(f"MY_CUSTOM_DATA: {config}")
+    logger.info(f"Body: {config}")
 
     # Set up Daily transport with video/audio parameters
     transport = DailyTransport(
