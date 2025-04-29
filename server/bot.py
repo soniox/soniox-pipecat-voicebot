@@ -40,8 +40,8 @@ from pipecat.pipeline.task import PipelineParams, PipelineTask
 from pipecat.processors.aggregators.openai_llm_context import OpenAILLMContext
 from pipecat.processors.frame_processor import FrameDirection, FrameProcessor
 from pipecat.processors.frameworks.rtvi import RTVIConfig, RTVIObserver, RTVIProcessor
-from pipecat.services.cartesia import CartesiaTTSService
-from pipecat.services.openai import OpenAILLMService
+from pipecat.services.cartesia.tts import CartesiaTTSService
+from pipecat.services.openai.llm import OpenAILLMService
 from pipecat.transports.services.daily import DailyParams, DailyTransport
 from pipecatcloud.agent import DailySessionArguments
 
@@ -237,6 +237,8 @@ async def main(room_url: str, token: str, config: dict):
     async def on_client_ready(rtvi):
         # Notify the client that the bot is ready
         await rtvi.set_bot_ready()
+        # Kick off the conversation by pushing a context frame to the pipeline
+        await task.queue_frames([context_aggregator.user().get_context_frame()])
 
     @transport.event_handler("on_first_participant_joined")
     async def on_first_participant_joined(transport, participant):
@@ -244,8 +246,6 @@ async def main(room_url: str, token: str, config: dict):
         await task.queue_frame(quiet_frame)
         # Capture the first participant's transcription
         await transport.capture_participant_transcription(participant["id"])
-        # Kick off the conversation by pushing a context frame to the pipeline
-        await task.queue_frames([context_aggregator.user().get_context_frame()])
 
     @transport.event_handler("on_participant_left")
     async def on_participant_left(transport, participant, reason):
