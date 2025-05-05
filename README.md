@@ -12,7 +12,7 @@ This project demonstrates how to build a complete Pipecat AI agent application w
 
 > See the [simple-chatbot example](https://github.com/pipecat-ai/pipecat/tree/main/examples/simple-chatbot) with different client and server implementations.
 
-## Quick Start
+## Quick Start (Local run)
 
 ### 1. Server Setup
 
@@ -39,16 +39,16 @@ Copy env.example to .env and add your API keys:
 
 ```bash
 cp env.example .env
-# Edit .env to add OPENAI_API_KEY and CARTESIA_API_KEY
+# Edit .env to add OPENAI_API_KEY, CARTESIA_API_KEY, and DAILY_API_KEY
 ```
 
 Run the server locally to test before deploying:
 
 ```bash
-LOCAL_RUN=1 python bot.py
+python server.py
 ```
 
-This will open a browser window with a Daily.co room where you can test your bot directly.
+> You can join this client via Daily's Prebuilt UI at http://localhost:7860 or follow step 2 to join from the simple-chatbot client.
 
 ### 2. Client Setup
 
@@ -64,15 +64,15 @@ Install dependencies:
 npm install
 ```
 
-Create `.env.local` file with your Pipecat Cloud API key:
+Create `.env.local` file and add your `PIPECAT_CLOUD_API_KEY`:
 
 ```bash
 cp env.local.example .env.local
 ```
 
-> Create a Pipecat Cloud API key using the dashboard
+> Create a Pipecat Cloud API public key using the dashboard. This key is still a secret, so protect it. It's meant to launch your Pipecat apps.
 
-Start the development server:
+Run the client app:
 
 ```bash
 npm run dev
@@ -128,7 +128,7 @@ pcc deploy
 
 2. Connect your GitHub repository to Vercel
 
-3. Add your `PIPECAT_CLOUD_API_KEY` environment variable in Vercel
+3. Add your `PIPECAT_CLOUD_API_KEY` and `AGENT_NAME` environment variable in Vercel
 
 4. Deploy with the Vercel dashboard or CLI
 
@@ -153,5 +153,7 @@ simple-chatbot/
     ├── build.sh           # Script for building and pushing Docker image
     ├── requirements.txt   # Python dependencies
     ├── pcc-deploy.toml    # Pipecat Cloud deployment config
+    ├── runner.py          # Local dev only: A runner that launches
+    ├── server.py          # Local dev only: A FastAPI server to handle inbound requests
     └── README.md          # Server-specific documentation
 ```
