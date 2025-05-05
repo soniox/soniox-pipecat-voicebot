@@ -19,7 +19,6 @@ the conversation flow.
 
 import os
 
-import aiohttp
 from dotenv import load_dotenv
 from loguru import logger
 from PIL import Image
@@ -47,16 +46,8 @@ from pipecatcloud.agent import DailySessionArguments
 
 load_dotenv(override=True)
 
-# Check if we're in local development mode
-LOCAL_RUN = os.getenv("LOCAL_RUN")
-if LOCAL_RUN:
-    import asyncio
-    import webbrowser
-
-    try:
-        from local_runner import configure
-    except ImportError:
-        logger.error("Could not import local_runner module. Local development mode may not work.")
+# Check if we're running locally
+IS_LOCAL_RUN = os.environ.get("LOCAL_RUN", "0") == "1"
 
 # Logger for local dev
 # logger.add(sys.stderr, level="DEBUG")
@@ -137,20 +128,22 @@ async def main(room_url: str, token: str, config: dict):
     """
     logger.info(f"Body: {config}")
 
-    # Set up Daily transport with video/audio parameters
+    if not IS_LOCAL_RUN:
+        from pipecat.audio.filters.krisp_filter import KrispFilter
+
     transport = DailyTransport(
         room_url,
         token,
         "Simple Chatbot",
         DailyParams(
+            audio_in_enabled=True,  # Enable input audio for the bot
+            audio_in_filter=None if IS_LOCAL_RUN else KrispFilter(),  # Only use Krisp in production
             audio_out_enabled=True,  # Enable output audio for the bot
-            camera_out_enabled=True,  # Enable the camera output for the bot
-            camera_out_width=1024,  # Set the camera output width
-            camera_out_height=576,  # Set the camera output height
+            video_out_enabled=True,  # Enable the video output for the bot
+            video_out_width=1024,  # Set the video output width
+            video_out_height=576,  # Set the video output height
             transcription_enabled=True,  # Enable transcription for the user
-            vad_enabled=True,  # Enable VAD to handle user speech
             vad_analyzer=SileroVADAnalyzer(),  # Use the Silero VAD analyzer
-            vad_audio_passthrough=True,  # Pass audio through VAD for user speech to the rest of the pipeline
         ),
     )
 
@@ -259,7 +252,7 @@ async def main(room_url: str, token: str, config: dict):
 
 
 async def bot(args: DailySessionArguments):
-    """Main bot entry point compatible with the FastAPI route handler.
+    """Main bot entry point compatible with Pipecat Cloud.
 
     Args:
         room_url: The Daily room URL
@@ -275,28 +268,3 @@ async def bot(args: DailySessionArguments):
     except Exception as e:
         logger.exception(f"Error in bot process: {str(e)}")
         raise
-
-
-# Local development functions
-async def local_main():
-    """Function for local development testing."""
-    try:
-        async with aiohttp.ClientSession() as session:
-            (room_url, token) = await configure(session)
-            logger.warning("_")
-            logger.warning("_")
-            logger.warning(f"Talk to your voice agent here: {room_url}")
-            logger.warning("_")
-            logger.warning("_")
-            webbrowser.open(room_url)
-            await main(room_url, token, config={})
-    except Exception as e:
-        logger.exception(f"Error in local development mode: {e}")
-
-
-# Local development entry point
-if LOCAL_RUN and __name__ == "__main__":
-    try:
-        asyncio.run(local_main())
-    except Exception as e:
-        logger.exception(f"Failed to run in local mode: {e}")

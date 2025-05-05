@@ -22,7 +22,11 @@ npm install
 
 ```
 PIPECAT_CLOUD_API_KEY=your_pipecat_cloud_key
+AGENT_NAME=simple-chatbot
+NEXT_PUBLIC_API_BASE_URL=http://localhost:7860
 ```
+
+> Note: `NEXT_PUBLIC_API_BASE_URL` should be `/api` when deployed to Pipecat Cloud.
 
 3. Start the development server:
 

@@ -9,6 +9,7 @@ Copy `env.example` to `.env` and configure:
 ```ini
 OPENAI_API_KEY=          # Your OpenAI API key (required for OpenAI bot)
 CARTESIA_API_KEY=        # Your Cartesia API key
+DAILY_API_KEY=           # Your Daily API key (LOCAL DEV only)
 ```
 
 ## Running the server locally
@@ -29,5 +30,10 @@ pip install -r requirements.txt
 Run the server:
 
 ```bash
-LOCAL_RUN=1 python bot.py
+python server.py
 ```
+
+Connect:
+
+- Either connect directly using Daily's Prebuilt UI via http://localhost:7860
+- Launch the client app
