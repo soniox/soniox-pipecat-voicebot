@@ -39,7 +39,7 @@ Copy env.example to .env and add your API keys:
 
 ```bash
 cp env.example .env
-# Edit .env to add OPENAI_API_KEY, CARTESIA_API_KEY, and DAILY_API_KEY
+# Edit .env to add SONIOX_API_KEY, OPENAI_API_KEY, CARTESIA_API_KEY, and DAILY_API_KEY
 ```
 
 Run the server locally to test before deploying:

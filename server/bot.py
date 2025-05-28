@@ -41,8 +41,12 @@ from pipecat.processors.frame_processor import FrameDirection, FrameProcessor
 from pipecat.processors.frameworks.rtvi import RTVIConfig, RTVIObserver, RTVIProcessor
 from pipecat.services.cartesia.tts import CartesiaTTSService
 from pipecat.services.openai.llm import OpenAILLMService
+from pipecat.transcriptions.language import Language
 from pipecat.transports.services.daily import DailyParams, DailyTransport
 from pipecatcloud.agent import DailySessionArguments
+
+from soniox.config import SonioxInputParams
+from soniox.stt import SonioxSTTService
 
 load_dotenv(override=True)
 
@@ -62,7 +66,9 @@ for i in range(1, 26):
     # Get the filename without the extension to use as the dictionary key
     # Open the image and convert it to bytes
     with Image.open(full_path) as img:
-        sprites.append(OutputImageRawFrame(image=img.tobytes(), size=img.size, format=img.format))
+        sprites.append(
+            OutputImageRawFrame(image=img.tobytes(), size=img.size, format=img.format)
+        )
 
 # Create a smooth animation by adding reversed frames
 flipped = sprites[::-1]
@@ -70,7 +76,9 @@ sprites.extend(flipped)
 
 # Define static and animated states
 quiet_frame = sprites[0]  # Static frame for when bot is listening
-talking_frame = SpriteFrame(images=sprites)  # Animation sequence for when bot is talking
+talking_frame = SpriteFrame(
+    images=sprites
+)  # Animation sequence for when bot is talking
 
 
 class TalkingAnimation(FrameProcessor):
@@ -106,7 +114,9 @@ class TalkingAnimation(FrameProcessor):
         await self.push_frame(frame, direction)
 
 
-async def fetch_weather_from_api(function_name, tool_call_id, args, llm, context, result_callback):
+async def fetch_weather_from_api(
+    function_name, tool_call_id, args, llm, context, result_callback
+):
     """Fetch weather data dummy function.
 
     This function simulates fetching weather data from an external API.
@@ -137,13 +147,27 @@ async def main(room_url: str, token: str, config: dict):
         "Simple Chatbot",
         DailyParams(
             audio_in_enabled=True,  # Enable input audio for the bot
-            audio_in_filter=None if IS_LOCAL_RUN else KrispFilter(),  # Only use Krisp in production
+            audio_in_filter=None
+            if IS_LOCAL_RUN
+            else KrispFilter(),  # Only use Krisp in production
             audio_out_enabled=True,  # Enable output audio for the bot
             video_out_enabled=True,  # Enable the video output for the bot
             video_out_width=1024,  # Set the video output width
             video_out_height=576,  # Set the video output height
-            transcription_enabled=True,  # Enable transcription for the user
+            transcription_enabled=False,  # Disable transcription for the user, use Soniox instead
             vad_analyzer=SileroVADAnalyzer(),  # Use the Silero VAD analyzer
+        ),
+    )
+
+    stt = SonioxSTTService(
+        api_key=os.getenv("SONIOX_API_KEY"),
+        # TODO: remove dev url
+        url="wss://stt-rt.speechdev.soniox.com/transcribe-websocket",
+        params=SonioxInputParams(
+            # Add language hints to improve transcription accuracy. Variants are ignored.
+            # For example "en-GB" will be treated same as "en".
+            # List of supported languages: https://soniox.com/docs/speech-to-text/core-concepts/supported-languages
+            language_hints=[Language.EN, Language.ES, Language.JA, Language.ZH],
         ),
     )
 
@@ -154,7 +178,7 @@ async def main(room_url: str, token: str, config: dict):
     )
 
     # Initialize LLM service
-    llm = OpenAILLMService(api_key=os.getenv("OPENAI_API_KEY"), model="gpt-4o")
+    llm = OpenAILLMService(api_key=os.getenv("OPENAI_API_KEY"), model="gpt-4.1-mini")
 
     # Register your function call providing the function name and callback
     llm.register_function("get_current_weather", fetch_weather_from_api)
@@ -206,6 +230,7 @@ async def main(room_url: str, token: str, config: dict):
         [
             transport.input(),
             rtvi,
+            stt,
             context_aggregator.user(),
             llm,
             tts,

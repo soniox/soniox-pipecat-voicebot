@@ -7,8 +7,9 @@ A Pipecat bot.py file that is built to be deployed to Pipecat Cloud.
 Copy `env.example` to `.env` and configure:
 
 ```ini
+SONIOX_API_KEY=          # Your Soniox API key (required for Soniox STT)
 OPENAI_API_KEY=          # Your OpenAI API key (required for OpenAI bot)
-CARTESIA_API_KEY=        # Your Cartesia API key
+CARTESIA_API_KEY=        # Your Cartesia API key (for TTS)
 DAILY_API_KEY=           # Your Daily API key (LOCAL DEV only)
 ```
 
