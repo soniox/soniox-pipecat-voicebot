@@ -1,6 +1,6 @@
-# Simple Chatbot for Pipecat Cloud
+# Simple Real-Time VoiceBot for Pipecat Cloud
 
-This project demonstrates how to build a complete Pipecat AI agent application with both client and server components. It includes a Next.js client for interacting with a Pipecat AI bot server through Daily.co's WebRTC transport.
+This project demonstrates how to build a complete Pipecat AI real-time voice agent application with both client and server components. It includes a Next.js client for interacting with a Pipecat AI bot server through Daily.co's WebRTC transport.
 
 <img src="image.png" width="420px">
 
@@ -10,7 +10,7 @@ This project demonstrates how to build a complete Pipecat AI agent application w
 - **Client**: Next.js TypeScript web application using the Pipecat React & JS SDKs
 - **Infrastructure**: Deployable to Pipecat Cloud (server) and Vercel (client)
 
-> See the [simple-chatbot example](https://github.com/pipecat-ai/pipecat/tree/main/examples/simple-chatbot) with different client and server implementations.
+> See the [simple-chatbot example](https://github.com/pipecat-ai/pipecat/tree/main/examples/simple-chatbot) from Pipecat with different client and server implementations.
 
 ## Quick Start (Local run)
 
@@ -48,7 +48,7 @@ Run the server locally to test before deploying:
 python server.py
 ```
 
-> You can join this client via Daily's Prebuilt UI at http://localhost:7860 or follow step 2 to join from the simple-chatbot client.
+> You can join this client via Daily's Prebuilt UI at http://localhost:7860 or follow step 2 to join from the demo voice bot web UI.
 
 ### 2. Client Setup
 
@@ -111,7 +111,7 @@ chmod +x build.sh
 4. Create a secret set for your API keys:
 
 ```bash
-pcc secrets set simple-chatbot-secrets --file .env
+pcc secrets set simple-voicebot-secrets --file .env
 ```
 
 5. Deploy to Pipecat Cloud:
@@ -135,8 +135,8 @@ pcc deploy
 ## Project Structure
 
 ```
-simple-chatbot/
-├── client-next/            # Next.js client application
+pipecat-cloud-simple-voicebot/
+├── client-react/            # Next.js client application
 │   ├── src/
 │   │   ├── app/            # Next.js app routes
 │   │   │   └── api/

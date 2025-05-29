@@ -2,8 +2,8 @@
 set -e
 
 VERSION="0.1"
-DOCKER_USERNAME="markatdaily"
-AGENT_NAME="simple-chatbot"
+DOCKER_USERNAME="your-docker-hub-username"
+AGENT_NAME="simple-voicebot"
 
 # Build the Docker image with the correct context
 echo "Building Docker image..."
