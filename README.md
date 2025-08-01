@@ -1,6 +1,6 @@
-# Simple Real-Time VoiceBot for Pipecat Cloud
+# Real-Time VoiceBot with Soniox Speech-to-Text & Pipecat Cloud
 
-This project demonstrates how to build a complete Pipecat AI real-time voice agent application with both client and server components. It includes a Next.js client for interacting with a Pipecat AI bot server through Daily.co's WebRTC transport.
+This project showcases a full-stack real-time voice agent that leverages Soniox’s real-time speech-to-text (STT) for live audio transcription, integrated with Pipecat. It features a Next.js client for seamless interaction with a Python-based Pipecat bot server, using Daily.co’s WebRTC for low-latency audio streaming.
 
 <img src="image.png" width="420px">
 

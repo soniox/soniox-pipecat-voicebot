@@ -18,6 +18,7 @@ the conversation flow.
 """
 
 import os
+from typing import List
 
 from dotenv import load_dotenv
 from loguru import logger
@@ -41,12 +42,14 @@ from pipecat.processors.frame_processor import FrameDirection, FrameProcessor
 from pipecat.processors.frameworks.rtvi import RTVIConfig, RTVIObserver, RTVIProcessor
 from pipecat.services.cartesia.tts import CartesiaTTSService
 from pipecat.services.openai.llm import OpenAILLMService
+from pipecat.services.soniox.stt import SonioxSTTService, SonioxInputParams
 from pipecat.transcriptions.language import Language
 from pipecat.transports.services.daily import DailyParams, DailyTransport
 from pipecatcloud.agent import DailySessionArguments
-
-from soniox.config import SonioxInputParams
-from soniox.stt import SonioxSTTService
+from openai.types.chat import (
+    ChatCompletionSystemMessageParam,
+    ChatCompletionMessageParam,
+)
 
 load_dotenv(override=True)
 
@@ -207,11 +210,11 @@ async def main(room_url: str, token: str, config: dict):
     tools = ToolsSchema(standard_tools=[weather_function])
 
     # Set up initial messages for the bot
-    messages = [
-        {
-            "role": "system",
-            "content": "You are Chatbot, a friendly, helpful robot. Your goal is to demonstrate your capabilities in a succinct way. Your output will be converted to audio so don't include special characters in your answers. Respond to what the user said in a creative and helpful way, but keep your responses brief. Start by introducing yourself.",
-        },
+    messages: List[ChatCompletionMessageParam] = [
+        ChatCompletionSystemMessageParam(
+            role="system",
+            content="You are Chatbot, a friendly, helpful robot. Your goal is to demonstrate your capabilities in a succinct way. Your output will be converted to audio so don't include special characters in your answers. Respond to what the user said in a creative and helpful way, but keep your responses brief. Start by introducing yourself.",
+        )
     ]
 
     # Set up conversation context and management
